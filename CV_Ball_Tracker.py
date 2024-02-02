@@ -1,7 +1,12 @@
 import numpy as np
 import cv2 as cv
+from functions import list_ports
 
-videoCapture = cv.VideoCapture(0)
+available_ports,working_ports,non_working_ports = list_ports()
+print(working_ports)
+cameraPort = int(input())
+
+videoCapture = cv.VideoCapture(cameraPort)
 prevCircle = None
 dist = lambda x1, y1, x2, y2: (x1-x2)**2+(y1-y2)**2
 
@@ -24,7 +29,7 @@ while True:
 
     #cv.imshow('blurFrame',blurFrame)
     circles = cv.HoughCircles(blurFrame, cv.HOUGH_GRADIENT, 1.2, 100, 
-                              param1=100, param2=40, minRadius=15, maxRadius=300)
+                              param1=100, param2=50, minRadius=10, maxRadius=400)
     
     if circles is not None:
         circles = np.uint16(np.around(circles))
