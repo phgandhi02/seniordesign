@@ -1,5 +1,5 @@
-FROM osrf/ros:humble-desktop-full
-
+FROM osrf/ros:foxy-desktop
+ENV DISPLAY=host.docker.internal:0.0
 # Install some basic dependencies
 RUN apt-get update && apt-get install -y \
     curl \
@@ -26,30 +26,26 @@ RUN apt upgrade -y
 # RUN apt install code
 
 # Install some python packages
-RUN pip3 install numpy scipy matplotlib scikit-learn opencv-python
+RUN pip3 install scipy matplotlib scikit-learn opencv-python
+
 
 # Install some ROS packages
 RUN apt-get install -y \
-    ros-humble-rosbridge-suite \
-    ros-humble-rosbridge-library \
-    ros-humble-rosbridge-msgs
+    ros-foxy-rosbridge-suite \
+    ros-foxy-rosbridge-library \
+    ros-foxy-rosbridge-msgs \
+    ros-foxy-xacro \
+    ros-foxy-joint-state-publisher-gui
 
-# Set up the catkin workspace
-RUN mkdir -p ballbot_ws/src
-WORKDIR ballbot_ws/src
-
-# Clone the ballbot repository
-# Replace 'your-repo-url' with the URL of your repository
-RUN git clone your-repo-url .
-
-WORKDIR /ballbot_ws
-
-# Install the dependencies
-RUN rosdep update && rosdep install --from-paths src --ignore-src -r -y
+# Set up the colcon workspace
+RUN mkdir -p ~/ballbot_ws/src
 
 # Build the workspace
-RUN echo 'source /opt/ros/${ROS_DISTRO}/setup.bash' >> /home/$USERNAME/.bashrc \
-RUN /bin/bash -c '. /opt/ros/humble/setup.bash; colcon build'
+RUN echo 'source /opt/ros/${ROS_DISTRO}/setup.bash' >> /home/$USERNAME/.bashrc
+RUN /bin/bash -c '/opt/ros/foxy/setup.bash; colcon build'
+
+RUN apt install ros-foxy-ament-cmake
+#RUN apt install ros-foxy-ament-cmake-clang-format
 
 # Set the entrypoint
-CMD /bin/bash -c '. /opt/ros/humble/setup.bash; . install/setup.bash; roslaunch ballbot ballbot.launch'
+#CMD /bin/bash -c '. /opt/ros/foxy/setup.bash; . install/setup.bash; roslaunch ballbot ballbot.launch'
