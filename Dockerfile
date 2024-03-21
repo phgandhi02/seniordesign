@@ -45,7 +45,6 @@ RUN echo 'source /opt/ros/${ROS_DISTRO}/setup.bash' >> /home/$USERNAME/.bashrc
 RUN /bin/bash -c '/opt/ros/foxy/setup.bash; colcon build'
 
 RUN apt install ros-foxy-ament-cmake
-#RUN apt install ros-foxy-ament-cmake-clang-format
 
 # Set the entrypoint
 #CMD /bin/bash -c '. /opt/ros/foxy/setup.bash; . install/setup.bash; roslaunch ballbot ballbot.launch'
